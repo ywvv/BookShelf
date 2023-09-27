@@ -4,7 +4,9 @@ import com.waf.bookshelf.network.BookService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-interface AppContainer
+interface AppContainer {
+    val bookRepository: BooksRepository
+}
 
 class DefaultAppContainer : AppContainer {
     private val retrofit = Retrofit.Builder()
@@ -14,6 +16,10 @@ class DefaultAppContainer : AppContainer {
 
     private val retrofitService: BookService by lazy {
         retrofit.create(BookService::class.java)
+    }
+
+    override val bookRepository: BooksRepository by lazy {
+        NetworkBooksRepository(retrofitService)
     }
 
     companion object {
